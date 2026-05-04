@@ -1,0 +1,51 @@
+# ── Environment & secrets ──────────────────────────────────────────────────────
+.env
+*.env.local
+*.env.*.local
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Editor ────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Backend (Go) ──────────────────────────────────────────────────────────────
+backend/main
+backend/vendor/
+backend/*.exe
+backend/*.out
+backend/*.exe~
+backend/*.dll
+backend/*.so
+backend/*.dylib
+
+# Test binary, built with `go test -c`
+backend/*.test
+
+# Code coverage profiles and other test artifacts
+backend/coverage.*
+backend/*.coverprofile
+backend/profile.cov
+
+# Go workspace file
+backend/go.work
+backend/go.work.sum
+
+# ── Frontend (Node / Vite) ────────────────────────────────────────────────────
+website/node_modules/
+website/dist/
+website/.vite/
+website/logs
+website/*.log
+website/npm-debug.log*
+website/yarn-debug.log*
+website/yarn-error.log*
+website/pnpm-debug.log*
+website/lerna-debug.log*
+
+# Files
+PROJECT.md
