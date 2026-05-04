@@ -4,7 +4,7 @@ services:
     image: redis:7-alpine
     container_name: git-visualizer-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
