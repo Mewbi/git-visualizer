@@ -68,26 +68,3 @@ See [`backend/README.md`](backend/README.md) for the full API reference, configu
 Renders the commit graph using ReactFlow with a dagre-computed layout. Commits are displayed as cards in branch lanes with color-coded edges. Clicking a node opens a detail panel. The app polls for updates every 20 seconds.
 
 See [`website/README.md`](website/README.md) for the project structure and development commands.
-
-## API Overview
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/repo` | `GET` | Fetch full commit graph |
-| `/repo/updates` | `GET` | Fetch commits since a known hash |
-| `/repo/refresh` | `POST` | Force re-fetch and rebuild cache |
-
-All endpoints accept `owner` and `name` query parameters. Full documentation in [`backend/README.md`](backend/README.md).
-
-## Configuration
-
-Backend settings via environment variables:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `REDIS_ADDR` | `localhost:6379` | Redis address |
-| `REDIS_PASSWORD` | *(empty)* | Redis password |
-| `REPOS_PATH` | `/tmp/repos` | Local path for cloned repos |
-| `APP_ENV` | *(development)* | Set to `production` for release mode |
-
-Cache TTL defaults to 30 minutes with sliding expiration on every read.
