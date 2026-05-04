@@ -1,0 +1,14 @@
+name: Git Visualizer API
+development: true
+server:
+  host: ""
+  port: 8080
+  cors_origins:
+    - http://localhost:5173
+redis:
+  addr: localhost:6379
+  password: ""
+  db: 0
+  ttl_minutes: 30
+storage:
+  repos_path: /tmp/repos
