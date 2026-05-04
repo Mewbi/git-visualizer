@@ -1,0 +1,55 @@
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: git-visualizer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - git-visualizer-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: git-visualizer-backend
+    environment:
+      REDIS_ADDR: redis:6379
+      REPOS_PATH: /repos
+    volumes:
+      - repos_data:/repos
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - git-visualizer-net
+    restart: unless-stopped
+
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: git-visualizer-website
+    ports:
+      - "${PORT:-80}:80"
+    depends_on:
+      - backend
+    networks:
+      - git-visualizer-net
+    restart: unless-stopped
+
+networks:
+  git-visualizer-net:
+    driver: bridge
+
+volumes:
+  redis_data:
+  repos_data:
