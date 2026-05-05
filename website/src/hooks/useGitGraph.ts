@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { fetchGraph, fetchUpdates } from '../lib/api'
 import type { Commit, GraphState } from '../types'
 
-const POLL_INTERVAL = 20_000
+const POLL_INTERVAL = 30_000
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -22,6 +22,7 @@ export function useGitGraph(): UseGitGraphResult {
 
   const ownerRef = useRef<string>('')
   const nameRef = useRef<string>('')
+  const headRef = useRef<string>('')
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const abortRef = useRef<AbortController | null>(null)
 
@@ -36,29 +37,26 @@ export function useGitGraph(): UseGitGraphResult {
   const poll = useCallback(async () => {
     const owner = ownerRef.current
     const name = nameRef.current
+    const head = headRef.current
 
-    setState(prev => {
-      if (!prev) return prev
-      const run = async () => {
-        try {
-          const data = await fetchUpdates(owner, name, prev.head)
-          if (data.newNodes.length > 0) {
-            setState(curr => {
-              if (!curr) return curr
-              const next = new Map(curr.nodes)
-              for (const c of data.newNodes) next.set(c.hash, c)
-              return { nodes: next, head: data.head }
-            })
-          }
-        } catch {
-          // silently ignore poll errors
-        } finally {
-          pollTimer.current = setTimeout(poll, POLL_INTERVAL)
-        }
+    if (!head) return
+
+    try {
+      const data = await fetchUpdates(owner, name, head)
+      if (data.newNodes.length > 0) {
+        headRef.current = data.head
+        setState(curr => {
+          if (!curr) return curr
+          const next = new Map(curr.nodes)
+          for (const c of data.newNodes) next.set(c.hash, c)
+          return { nodes: next, head: data.head }
+        })
       }
-      run()
-      return prev
-    })
+    } catch {
+      // silently ignore poll errors
+    } finally {
+      pollTimer.current = setTimeout(poll, POLL_INTERVAL)
+    }
   }, [])
 
   const load = useCallback(
@@ -68,6 +66,7 @@ export function useGitGraph(): UseGitGraphResult {
 
       ownerRef.current = owner
       nameRef.current = name
+      headRef.current = ''
 
       setStatus('loading')
       setError(null)
@@ -78,6 +77,7 @@ export function useGitGraph(): UseGitGraphResult {
         const nodeMap = new Map<string, Commit>()
         for (const c of data.nodes) nodeMap.set(c.hash, c)
 
+        headRef.current = data.head
         setState({ nodes: nodeMap, head: data.head })
         setStatus('success')
         setIsPolling(true)

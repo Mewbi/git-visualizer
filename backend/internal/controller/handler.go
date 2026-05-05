@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"git-visualizer/backend/internal/service"
 
@@ -19,7 +20,13 @@ func (ct *Controller) getGraph(c *gin.Context) {
 		return
 	}
 
-	graph, err := ct.service.GetGraph(c.Request.Context(), owner, name)
+	limitStr := c.DefaultQuery("limit", "1000")
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit < 0 {
+		limit = 1000
+	}
+
+	graph, err := ct.service.GetGraph(c.Request.Context(), owner, name, limit)
 	if err != nil {
 		ct.handleServiceError(c, err)
 		return

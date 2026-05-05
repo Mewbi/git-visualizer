@@ -52,7 +52,7 @@ type CacheRepository interface {
 type GitRepository interface {
 	EnsureRepo(ctx context.Context, owner, name string) (string, error)
 	FetchRepo(ctx context.Context, localPath string) error
-	BuildFullGraph(ctx context.Context, owner, name, localPath string) (*Graph, error)
+	BuildFullGraph(ctx context.Context, owner, name, localPath string, limit int) (*Graph, error)
 	BuildIncrementalGraph(ctx context.Context, owner, name, localPath, since string) ([]Commit, string, error)
 	GetCommitDiff(ctx context.Context, localPath, hash string) (*CommitDiff, error)
 }

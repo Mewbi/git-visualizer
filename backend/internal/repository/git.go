@@ -127,8 +127,12 @@ func populatePRLinks(commits []Commit, owner, name string) {
 	}
 }
 
-func (g *GitRepo) BuildFullGraph(ctx context.Context, owner, name, localPath string) (*Graph, error) {
-	args := []string{"-C", localPath, "log", "--all", "--pretty=format:" + logFormat}
+func (g *GitRepo) BuildFullGraph(ctx context.Context, owner, name, localPath string, limit int) (*Graph, error) {
+	args := []string{"-C", localPath, "log", "--all"}
+	if limit > 0 {
+		args = append(args, fmt.Sprintf("--max-count=%d", limit))
+	}
+	args = append(args, "--pretty=format:"+logFormat)
 	commits, err := g.runLog(ctx, args)
 	if err != nil {
 		return nil, err

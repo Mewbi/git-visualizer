@@ -2,8 +2,8 @@ import type { GraphResponse, UpdatesResponse, CommitDiff } from '../types'
 
 const BASE = ''
 
-export async function fetchGraph(owner: string, name: string): Promise<GraphResponse> {
-  const res = await fetch(`${BASE}/repo?owner=${encodeURIComponent(owner)}&name=${encodeURIComponent(name)}`)
+export async function fetchGraph(owner: string, name: string, limit = 1000): Promise<GraphResponse> {
+  const res = await fetch(`${BASE}/repo?owner=${encodeURIComponent(owner)}&name=${encodeURIComponent(name)}&limit=${limit}`)
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText)
     throw new Error(`Failed to fetch graph: ${text}`)

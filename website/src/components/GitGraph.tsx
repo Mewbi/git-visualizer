@@ -249,8 +249,11 @@ export default function GitGraph({ commits, head, owner, name }: GitGraphProps) 
     [commits, head]
   )
 
-  const [nodes, , onNodesChange] = useNodesState(initNodes)
-  const [edges, , onEdgesChange] = useEdgesState(initEdges)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges)
+
+  useEffect(() => { setNodes(initNodes) }, [initNodes, setNodes])
+  useEffect(() => { setEdges(initEdges) }, [initEdges, setEdges])
 
   const [selectedCommit, setSelectedCommit] = useState<Commit | null>(null)
   const [diff, setDiff] = useState<CommitDiff | null>(null)
@@ -283,6 +286,7 @@ export default function GitGraph({ commits, head, owner, name }: GitGraphProps) 
   return (
     <div className="relative w-full h-full">
       <ReactFlow
+        proOptions={{ hideAttribution: true }}
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
