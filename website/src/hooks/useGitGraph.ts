@@ -11,6 +11,7 @@ interface UseGitGraphResult {
   status: Status
   error: string | null
   load: (owner: string, name: string) => void
+  reset: () => void
   isPolling: boolean
 }
 
@@ -90,7 +91,18 @@ export function useGitGraph(): UseGitGraphResult {
     [stopPolling, poll]
   )
 
+  const reset = useCallback(() => {
+    stopPolling()
+    if (abortRef.current) abortRef.current.abort()
+    ownerRef.current = ''
+    nameRef.current = ''
+    headRef.current = ''
+    setState(null)
+    setStatus('idle')
+    setError(null)
+  }, [stopPolling])
+
   useEffect(() => () => stopPolling(), [stopPolling])
 
-  return { state, status, error, load, isPolling }
+  return { state, status, error, load, reset, isPolling }
 }

@@ -7,13 +7,28 @@
     --color-surface: #0d1117;
     --color-panel: #161b22;
     --color-border: #21262d;
+    --color-border-2: #30363d;
+    --color-muted-dim: #484f58;
+    --color-panel-hover: #1c2128;
     --color-accent: #3fb950;
     --color-accent-dim: #238636;
+    --color-accent-alpha: rgba(63, 185, 80, 0.25);
     --color-text: #e6edf3;
     --color-muted: #7d8590;
     --color-danger: #f85149;
     --color-warning: #d29922;
+    --color-warning-light: #ffa657;
     --color-info: #388bfd;
+    --color-info-light: #79c0ff;
+    --color-info-alpha: rgba(56, 139, 253, 0.25);
+    --color-text-secondary: #c9d1d9;
+    --color-pr-bg: #1c2d3a;
+    --color-pr-hover: #1f3550;
+    --color-merge-bg: #1f2328;
+    --color-head-bg: #238636;
+    --color-head-text: #3fb950;
+    --color-diff-add-bg: #0d2b1a;
+    --color-diff-del-bg: #2b0d0d;
 
     --lane-0: #3fb950;
     --lane-1: #388bfd;
@@ -23,6 +38,35 @@
     --lane-5: #79c0ff;
     --lane-6: #56d364;
     --lane-7: #e3b341;
+  }
+
+  [data-theme="light"] {
+    --color-bg: #eceff3;
+    --color-surface: #e2e6eb;
+    --color-panel: #d5dae0;
+    --color-border: #bfc7d0;
+    --color-border-2: #a8b2bc;
+    --color-muted-dim: #9198a1;
+    --color-panel-hover: #e0e4e8;
+    --color-accent: #1a7f37;
+    --color-accent-dim: #116329;
+    --color-accent-alpha: rgba(26, 127, 55, 0.25);
+    --color-text: #1f2328;
+    --color-muted: #57606a;
+    --color-danger: #cf222e;
+    --color-warning: #9a6700;
+    --color-warning-light: #953800;
+    --color-info: #0969da;
+    --color-info-light: #0550ae;
+    --color-info-alpha: rgba(9, 105, 218, 0.25);
+    --color-text-secondary: #57606a;
+    --color-pr-bg: #ddf4ff;
+    --color-pr-hover: #b6e3ff;
+    --color-merge-bg: #eaeef2;
+    --color-head-bg: #dafbe1;
+    --color-head-text: #116329;
+    --color-diff-add-bg: #e6ffec;
+    --color-diff-del-bg: #ffebe9;
   }
 
   * { box-sizing: border-box; }
@@ -39,7 +83,7 @@
 
 /* ReactFlow overrides */
 .react-flow__renderer { background: var(--color-bg) !important; }
-.react-flow__background pattern circle { fill: #21262d !important; }
+.react-flow__background pattern circle { fill: var(--color-border) !important; }
 .react-flow__minimap { background: var(--color-panel) !important; border: 1px solid var(--color-border); border-radius: 6px; }
 .react-flow__minimap-mask { fill: rgba(10,12,16,0.85) !important; }
 .react-flow__controls { background: var(--color-panel) !important; border: 1px solid var(--color-border) !important; border-radius: 6px !important; overflow: hidden; box-shadow: none !important; }
@@ -47,3 +91,5 @@
 .react-flow__controls-button:hover { background: var(--color-border) !important; fill: var(--color-text) !important; }
 .react-flow__controls-button:last-child { border-bottom: none !important; }
 .react-flow__edge-path { stroke-width: 2 !important; }
+
+[data-theme="light"] .react-flow__minimap-mask { fill: rgba(246,248,250,0.85) !important; }

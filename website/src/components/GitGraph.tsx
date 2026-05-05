@@ -34,12 +34,12 @@ function classifyLine(line: string): string {
 }
 
 const lineStyle: Record<string, string> = {
-  header: 'text-[#7d8590] bg-transparent',
-  meta:   'text-[#7d8590] bg-transparent',
-  hunk:   'text-[#79c0ff] bg-[#1c2d3a]',
-  add:    'text-[#3fb950] bg-[#0d2b1a]',
-  del:    'text-[#f85149] bg-[#2b0d0d]',
-  ctx:    'text-[#c9d1d9] bg-transparent',
+  header: 'text-[var(--color-muted)] bg-transparent',
+  meta:   'text-[var(--color-muted)] bg-transparent',
+  hunk:   'text-[var(--color-info-light)] bg-[var(--color-pr-bg)]',
+  add:    'text-[var(--color-accent)] bg-[var(--color-diff-add-bg)]',
+  del:    'text-[var(--color-danger)] bg-[var(--color-diff-del-bg)]',
+  ctx:    'text-[var(--color-text-secondary)] bg-transparent',
 }
 
 function DiffViewer({ diff }: { diff: string }) {
@@ -58,7 +58,7 @@ function DiffViewer({ diff }: { diff: string }) {
         )
       })}
       {truncated && (
-        <div className="px-3 py-1.5 text-[#7d8590] italic">
+        <div className="px-3 py-1.5 text-[var(--color-muted)] italic">
           … {lines.length - MAX_DIFF_LINES} more lines omitted
         </div>
       )}
@@ -73,18 +73,18 @@ function FileStatRow({ file }: { file: FileStat }) {
   const addPct = total > 0 ? Math.round((file.additions / total) * 100) : 0
 
   return (
-    <div className="flex items-center gap-2 py-1 px-3 hover:bg-[#1c2128] group">
-      <span className="text-[#e6edf3] font-mono text-[11px] truncate flex-1 min-w-0">{file.path}</span>
+    <div className="flex items-center gap-2 py-1 px-3 hover:bg-[var(--color-panel-hover)] group">
+      <span className="text-[var(--color-text)] font-mono text-[11px] truncate flex-1 min-w-0">{file.path}</span>
       <div className="flex items-center gap-1.5 shrink-0">
         {file.additions > 0 && (
-          <span className="text-[#3fb950] text-[10px] font-mono">+{file.additions}</span>
+          <span className="text-[var(--color-accent)] text-[10px] font-mono">+{file.additions}</span>
         )}
         {file.deletions > 0 && (
-          <span className="text-[#f85149] text-[10px] font-mono">−{file.deletions}</span>
+          <span className="text-[var(--color-danger)] text-[10px] font-mono">−{file.deletions}</span>
         )}
-        <div className="flex w-12 h-1.5 rounded-full overflow-hidden bg-[#f85149]">
+        <div className="flex w-12 h-1.5 rounded-full overflow-hidden bg-[var(--color-danger)]">
           <div
-            className="h-full bg-[#3fb950] rounded-full"
+            className="h-full bg-[var(--color-accent)] rounded-full"
             style={{ width: `${addPct}%` }}
           />
         </div>
@@ -109,19 +109,18 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
   const prNumber = commit.pr_link?.match(/\/pull\/(\d+)$/)?.[1]
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // Reset expanded state when a different commit is selected
   useEffect(() => { setIsExpanded(false) }, [commit.hash])
 
   return (
     <div
       style={{ width: isExpanded ? '780px' : '460px' }}
-      className="absolute top-0 right-0 h-full bg-[#0d1117] border-l border-[#21262d] flex flex-col z-10 shadow-2xl transition-[width] duration-200 ease-in-out"
+      className="absolute top-0 right-0 h-full bg-[var(--color-surface)] border-l border-[var(--color-border)] flex flex-col z-10 shadow-2xl transition-[width] duration-200 ease-in-out"
     >
       {/* header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#21262d] shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)] shrink-0">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="text-[11px] font-mono text-[#7d8590] shrink-0">commit</span>
-          <span className="text-[12px] font-mono text-[#79c0ff] truncate">{commit.hash}</span>
+          <span className="text-[11px] font-mono text-[var(--color-muted)] shrink-0">commit</span>
+          <span className="text-[12px] font-mono text-[var(--color-info-light)] truncate">{commit.hash}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0 ml-2">
           {prNumber && commit.pr_link && (
@@ -129,7 +128,7 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
               href={commit.pr_link}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-1 rounded bg-[#1c2d3a] text-[#388bfd] border border-[#388bfd40] hover:bg-[#1f3550] transition-colors"
+              className="flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-1 rounded bg-[var(--color-pr-bg)] text-[var(--color-info)] border border-[var(--color-info-alpha)] hover:bg-[var(--color-pr-hover)] transition-colors"
             >
               <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"/>
@@ -141,7 +140,7 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
           <button
             onClick={() => setIsExpanded(e => !e)}
             title={isExpanded ? 'Collapse panel' : 'Expand panel'}
-            className="text-[#7d8590] hover:text-[#e6edf3] w-6 h-6 flex items-center justify-center rounded hover:bg-[#21262d] transition-colors"
+            className="text-[var(--color-muted)] hover:text-[var(--color-text)] w-6 h-6 flex items-center justify-center rounded hover:bg-[var(--color-border)] transition-colors"
           >
             {isExpanded ? (
               <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
@@ -155,7 +154,7 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
           </button>
           <button
             onClick={onClose}
-            className="text-[#7d8590] hover:text-[#e6edf3] text-lg leading-none w-6 h-6 flex items-center justify-center rounded hover:bg-[#21262d] transition-colors"
+            className="text-[var(--color-muted)] hover:text-[var(--color-text)] text-lg leading-none w-6 h-6 flex items-center justify-center rounded hover:bg-[var(--color-border)] transition-colors"
           >
             ×
           </button>
@@ -163,18 +162,18 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
       </div>
 
       {/* commit meta */}
-      <div className="px-4 py-3 border-b border-[#21262d] shrink-0">
-        <div className="text-[13px] text-[#e6edf3] leading-relaxed mb-2">{commit.message}</div>
-        <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[11px] font-mono text-[#7d8590]">
-          <span><span className="text-[#484f58]">author</span> {commit.author}</span>
-          <span><span className="text-[#484f58]">date</span> {new Date(commit.timestamp * 1000).toLocaleString()}</span>
-          <span><span className="text-[#484f58]">age</span> {relativeTime(commit.timestamp)}</span>
+      <div className="px-4 py-3 border-b border-[var(--color-border)] shrink-0">
+        <div className="text-[13px] text-[var(--color-text)] leading-relaxed mb-2">{commit.message}</div>
+        <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[11px] font-mono text-[var(--color-muted)]">
+          <span><span className="text-[var(--color-muted-dim)]">author</span> {commit.author}</span>
+          <span><span className="text-[var(--color-muted-dim)]">date</span> {new Date(commit.timestamp * 1000).toLocaleString()}</span>
+          <span><span className="text-[var(--color-muted-dim)]">age</span> {relativeTime(commit.timestamp)}</span>
         </div>
         {commit.parents.length > 0 && (
-          <div className="mt-1 text-[11px] font-mono text-[#7d8590]">
-            <span className="text-[#484f58]">parents</span>{' '}
+          <div className="mt-1 text-[11px] font-mono text-[var(--color-muted)]">
+            <span className="text-[var(--color-muted-dim)]">parents</span>{' '}
             {commit.parents.map(p => (
-              <span key={p} className="text-[#ffa657] mr-2">{p.slice(0, 7)}</span>
+              <span key={p} className="text-[var(--color-warning-light)] mr-2">{p.slice(0, 7)}</span>
             ))}
           </div>
         )}
@@ -183,13 +182,13 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
       {/* diff area */}
       <div className="flex-1 overflow-hidden flex flex-col min-h-0">
         {diffStatus === 'loading' && (
-          <div className="flex items-center gap-2 px-4 py-3 text-[12px] font-mono text-[#7d8590]">
+          <div className="flex items-center gap-2 px-4 py-3 text-[12px] font-mono text-[var(--color-muted)]">
             <div className="flex gap-1">
               {[0, 1, 2].map(i => (
                 <span
                   key={i}
                   style={{ animationDelay: `${i * 150}ms` }}
-                  className="w-1.5 h-1.5 rounded-full bg-[#3fb950] animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-bounce"
                 />
               ))}
             </div>
@@ -198,7 +197,7 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
         )}
 
         {diffStatus === 'error' && (
-          <div className="px-4 py-3 text-[12px] font-mono text-[#f85149]">
+          <div className="px-4 py-3 text-[12px] font-mono text-[var(--color-danger)]">
             ✗ {diffError}
           </div>
         )}
@@ -206,8 +205,8 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
         {diffStatus === 'success' && diff && (
           <>
             {/* file stats */}
-            <div className="border-b border-[#21262d] shrink-0">
-              <div className="px-3 py-1.5 text-[10px] font-mono text-[#7d8590] uppercase tracking-wider">
+            <div className="border-b border-[var(--color-border)] shrink-0">
+              <div className="px-3 py-1.5 text-[10px] font-mono text-[var(--color-muted)] uppercase tracking-wider">
                 {diff.files.length} file{diff.files.length !== 1 ? 's' : ''} changed
               </div>
               <div className="max-h-36 overflow-y-auto">
@@ -218,11 +217,11 @@ function DetailPanel({ commit, diff, diffStatus, diffError, onClose }: DetailPan
             </div>
 
             {/* diff content */}
-            <div className="flex-1 overflow-y-auto overflow-x-auto bg-[#0a0c10]">
+            <div className="flex-1 overflow-y-auto overflow-x-auto bg-[var(--color-bg)]">
               {diff.diff ? (
                 <DiffViewer diff={diff.diff} />
               ) : (
-                <div className="px-4 py-3 text-[12px] font-mono text-[#7d8590] italic">
+                <div className="px-4 py-3 text-[12px] font-mono text-[var(--color-muted)] italic">
                   No textual changes (binary or empty diff)
                 </div>
               )}
@@ -303,12 +302,12 @@ export default function GitGraph({ commits, head, owner, name }: GitGraphProps) 
         elementsSelectable
         defaultEdgeOptions={{ type: 'smoothstep' }}
       >
-        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#21262d" />
+        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="var(--color-border)" />
         <Controls showInteractive={false} />
         <MiniMap
           nodeColor={(node) => {
             const d = node.data as CommitNodeData
-            return d?.laneColor ?? '#7d8590'
+            return d?.laneColor ?? 'var(--color-muted)'
           }}
           nodeStrokeWidth={0}
           pannable
